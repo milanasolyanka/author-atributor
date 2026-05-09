@@ -1,20 +1,31 @@
 import os
 import csv
+import re
 from glob import glob
 from bs4 import BeautifulSoup
 
 # Глобальная переменная с именем папки
-FOLDER_NAME = "messages start-20260228"
+FOLDER_NAME = "messages start-20260509"
+OUTPUT_FILE_NAME = 'messages_milana_chat.csv'
 
 def is_forwarded(message_div):
     """Проверяет, является ли сообщение пересланным (репостом)."""
-    # Ищем div с классом 'forwarded' (может быть 'forwarded body' или просто 'forwarded')
     if message_div.find('div', class_='forwarded'):
         return True
-    # Также проверим наличие любого элемента с классом 'forwarded'
     if message_div.find(class_='forwarded'):
         return True
     return False
+
+def clean_text(raw_text):
+    """
+    Заменяет любые последовательности пробельных символов (включая переносы строк)
+    на один пробел, удаляет начальные и конечные пробелы.
+    """
+    # Заменяем все виды пробелов (включая \n, \r, \t) на пробел
+    cleaned = re.sub(r'\s+', ' ', raw_text)
+    # Удаляем начальные и конечные пробелы
+    cleaned = cleaned.strip()
+    return cleaned
 
 def parse_html_file(file_path):
     """Извлекает из HTML-файла обычные сообщения (не репосты) длиной >= 100 символов."""
@@ -26,14 +37,10 @@ def parse_html_file(file_path):
         print(f"Ошибка чтения {file_path}: {e}")
         return results
 
-    # Ищем все блоки сообщений
     messages = soup.find_all('div', class_='message')
     for msg in messages:
-        # Пропускаем служебные сообщения
         if 'service' in msg.get('class', []):
             continue
-
-        # Пропускаем репосты (пересланные сообщения)
         if is_forwarded(msg):
             continue
 
@@ -41,18 +48,17 @@ def parse_html_file(file_path):
         if not body:
             continue
 
-        # Автор сообщения
         from_name_div = body.find('div', class_='from_name')
         if not from_name_div:
             continue
         author = from_name_div.get_text(strip=True)
 
-        # Текст сообщения
         text_div = body.find('div', class_='text')
         if not text_div:
             continue
 
-        text = text_div.get_text(strip=True)
+        # Получаем текст с сохранением структуры, затем очищаем переносы
+        text = text_div.get_text(separator=' ').strip()
         if len(text) >= 100:
             results.append((author, text))
 
@@ -63,7 +69,6 @@ def main():
         print(f"Папка '{FOLDER_NAME}' не найдена.")
         return
 
-    # Ищем все .html файлы в папке
     html_files = glob(os.path.join(FOLDER_NAME, "*.html"))
     if not html_files:
         print(f"В папке '{FOLDER_NAME}' нет HTML-файлов.")
@@ -74,8 +79,7 @@ def main():
         print(f"Обработка: {os.path.basename(file_path)}")
         all_messages.extend(parse_html_file(file_path))
 
-    # Запись в CSV
-    output_file = "messages.csv"
+    output_file = OUTPUT_FILE_NAME
     with open(output_file, 'w', encoding='utf-8-sig', newline='') as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
         writer.writerow(["author", "text"])
