@@ -1,2 +1,6 @@
-messages**
+preprocessed_data/**
+raw_data/**
 authors**
+*.png
+Telegram Desktop
+Telegram Desktop/**
