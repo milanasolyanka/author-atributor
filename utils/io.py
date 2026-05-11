@@ -135,6 +135,80 @@ def save_negative_results(
     )
 
 
+def save_graphematic_profile(
+        profile,
+        author_name
+):
+    output_dir = (
+        Path(RESULTS_DIR)
+        / "graphematic_profiles"
+    )
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    profile_path = (
+        output_dir
+        / f"{author_name}_profile.csv"
+    )
+
+    profile_df = pd.DataFrame([
+        profile
+    ])
+
+    profile_df.insert(
+        0,
+        "author",
+        author_name
+    )
+
+    profile_df.to_csv(
+        profile_path,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print(
+        f"[{author_name}] "
+        f"Graphematic profile saved -> {profile_path}"
+    )
+
+
+def save_graphematic_results(
+        results_df,
+        author_name
+):
+    output_dir = (
+        get_author_output_dir(
+            author_name
+        )
+        / "graphematic"
+    )
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    results_path = (
+        output_dir
+        / "graphematic_verification_results.csv"
+    )
+
+    results_df.to_csv(
+        results_path,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print(
+        f"[{author_name}] "
+        f"Graphematic results saved -> {results_path}"
+    )
+
+
 def save_summary(
         summary_df
 ):
@@ -191,5 +265,33 @@ def save_negative_summary(
 
     print(
         f"Negative summary saved -> "
+        f"{summary_path}"
+    )
+
+
+def save_graphematic_summary(
+        summary_df
+):
+    output_dir = Path(
+        RESULTS_DIR
+    )
+
+    output_dir.mkdir(
+        exist_ok=True
+    )
+
+    summary_path = (
+        output_dir
+        / "graphematic_summary.csv"
+    )
+
+    summary_df.to_csv(
+        summary_path,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print(
+        f"Graphematic summary saved -> "
         f"{summary_path}"
     )

@@ -1,6 +1,40 @@
 import re
 
 
+def extract_graphematic_features(
+        text
+):
+    return {
+        "dot_rate_100": extract_dot_rate_100(
+            text
+        ),
+        "comma_rate_100": extract_comma_rate_100(
+            text
+        ),
+        "dash_rate_100": extract_dash_rate_100(
+            text
+        ),
+        "exclamation_rate_100": extract_exclamation_rate_100(
+            text
+        ),
+        "question_rate_100": extract_question_rate_100(
+            text
+        ),
+        "yo_percent": extract_yo_percent(
+            text
+        ),
+        "uppercase_percent": extract_uppercase_percent(
+            text
+        ),
+        "quote_type": extract_quote_type(
+            text
+        ),
+        "dash_type": extract_dash_type(
+            text
+        ),
+    }
+
+
 # ==========================================================
 # HELPERS
 # ==========================================================
