@@ -79,17 +79,32 @@ def build_heuristic_profile(
     for feature in (
             CATEGORICAL_FEATURES
     ):
-        mode_series = (
+        values = (
             feature_df[
                 feature
-            ].mode()
+            ]
+            .dropna()
+            .tolist()
         )
 
-        profile[feature] = (
-            mode_series.iloc[0]
-            if not mode_series.empty
-            else "нет"
-        )
+        # убираем "нет"
+        meaningful_values = [
+            value
+            for value in values
+            if value != "нет"
+        ]
+
+        # если есть реальные признаки —
+        # выбираем самую частую НЕ-"нет"
+        if meaningful_values:
+            profile[feature] = max(
+                set(meaningful_values),
+                key=meaningful_values.count
+            )
+
+        # fallback
+        else:
+            profile[feature] = "нет"
 
     return profile
 
