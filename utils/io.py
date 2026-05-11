@@ -209,6 +209,41 @@ def save_graphematic_results(
     )
 
 
+def save_graphematic_negative_results(
+        results_df,
+        profile_author,
+        compared_author
+):
+    output_dir = (
+        get_author_output_dir(
+            profile_author
+        )
+        / "graphematic_negative"
+        / compared_author
+    )
+
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    results_path = (
+        output_dir
+        / "graphematic_negative_results.csv"
+    )
+
+    results_df.to_csv(
+        results_path,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print(
+        f"[{profile_author} vs {compared_author}] "
+        f"Graphematic negative results saved -> {results_path}"
+    )
+
+
 def save_summary(
         summary_df
 ):
@@ -293,5 +328,33 @@ def save_graphematic_summary(
 
     print(
         f"Graphematic summary saved -> "
+        f"{summary_path}"
+    )
+
+
+def save_graphematic_negative_summary(
+        summary_df
+):
+    output_dir = Path(
+        RESULTS_DIR
+    )
+
+    output_dir.mkdir(
+        exist_ok=True
+    )
+
+    summary_path = (
+        output_dir
+        / "graphematic_negative_summary.csv"
+    )
+
+    summary_df.to_csv(
+        summary_path,
+        index=False,
+        encoding="utf-8-sig"
+    )
+
+    print(
+        f"Graphematic negative summary saved -> "
         f"{summary_path}"
     )
