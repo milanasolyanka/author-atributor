@@ -1,6 +1,9 @@
 preprocessed_data/**
 raw_data/**
-authors**
+results/**
+authors/**
+
+**/__pycache__/**
 
 Telegram Desktop
 Telegram Desktop/**

@@ -1,0 +1,14 @@
+TEXT_COLUMN = "text"
+
+RANDOM_SEED = 67
+TRAIN_SIZE = 0.8
+
+WINDOW_SIZE = 500
+WINDOW_STEP = 250
+
+AUTHORS_DIR = "./authors"
+RESULTS_DIR = "./results"
+
+VERIFY_ALL_AUTHORS = False
+
+AUTHOR_NAME = "Before_I_Disappear_2.0"
