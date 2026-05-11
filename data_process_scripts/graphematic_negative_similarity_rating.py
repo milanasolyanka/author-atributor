@@ -82,7 +82,6 @@ def get_file_path():
 def get_output_path():
     return os.path.join(
         PROJECT_DIR,
-        RESULTS_DIR,
         OUTPUT_FILENAME
     )
 
